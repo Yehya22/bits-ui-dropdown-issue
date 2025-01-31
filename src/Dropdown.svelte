@@ -1,6 +1,7 @@
 <script lang="ts">
   import { DropdownMenu } from "bits-ui";
   import { Check, Ellipsis } from "lucide-svelte";
+  import { fly } from "svelte/transition";
 
   let isChecked = $state(false);
 
@@ -43,36 +44,44 @@
     </DropdownMenu.Trigger>
     <DropdownMenu.Portal>
       <DropdownMenu.Content
-        onOpenAutoFocus={(e) => e.preventDefault()}
         class="z-50 min-w-[200px] rounded-lg border border-gray-200 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+        forceMount
       >
-        <DropdownMenu.Item
-          class="flex w-full items-center rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-          onSelect={(e) => {
-            e?.stopPropagation?.();
-            handleAction("toggle", e);
-          }}
-        >
-          {isChecked ? "Mark Unread" : "Mark Read"}
-        </DropdownMenu.Item>
-        <DropdownMenu.Item
-          class="flex w-full items-center rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-          onSelect={(e) => {
-            e?.stopPropagation?.();
-            handleAction("action2", e);
-          }}
-        >
-          Action 2
-        </DropdownMenu.Item>
-        <DropdownMenu.Item
-          class="flex w-full items-center rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-          onSelect={(e) => {
-            e?.stopPropagation?.();
-            handleAction("action3", e);
-          }}
-        >
-          Action 3
-        </DropdownMenu.Item>
+        {#snippet child({ wrapperProps, props, open })}
+          {#if open}
+            <div {...wrapperProps}>
+              <div {...props} transition:fly>
+                <DropdownMenu.Item
+                  class="flex w-full items-center rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                  onSelect={(e) => {
+                    e?.stopPropagation?.();
+                    handleAction("toggle", e);
+                  }}
+                >
+                  {isChecked ? "Mark Unread" : "Mark Read"}
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  class="flex w-full items-center rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                  onSelect={(e) => {
+                    e?.stopPropagation?.();
+                    handleAction("action2", e);
+                  }}
+                >
+                  Action 2
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  class="flex w-full items-center rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                  onSelect={(e) => {
+                    e?.stopPropagation?.();
+                    handleAction("action3", e);
+                  }}
+                >
+                  Action 3
+                </DropdownMenu.Item>
+              </div>
+            </div>
+          {/if}
+        {/snippet}
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
   </DropdownMenu.Root>
